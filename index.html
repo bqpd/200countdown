@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="flipclock.css">
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+		<script src="flipclock.min.js"></script>
+
+		<title> 2.00 Countdown </title>
+
+		<style>
+		.clock.flip-clock-wrapper ul li a div div.inn {
+        color: #111;
+        text-shadow: 0 1px 1px #555;
+        background-color: #ddd;
+				/*font-family: serif;*/
+    }
+
+
+    .redclock.flip-clock-wrapper ul li a div div.inn {
+        background-color: #ee5555;
+				/*font-family: serif;*/
+    }
+
+
+		body {
+			background: black;
+		}
+
+		button {
+			border-width: 0;
+			font-weight: 700;
+			cursor: pointer;
+			margin: 2em;
+			height: 4em;
+			width: 4em;
+			border-radius: 2em;
+		}
+
+		.clock .red {
+
+		}
+
+		.pause {
+			background: #323434;
+		}
+
+		.startred {
+			background: #ee5555;
+		}
+
+		.startblack {
+			background: #ddd;
+		}
+
+		</style>
+	</head>
+	<body>
+<div style="margin: 0 auto; width: 300px">
+	<div class="clock" style="margin: 2em auto; width: 300px"></div>
+	<div class="redclock" style="margin: 2em auto; width: 300px"></div>
+	<br>
+
+	<button class="startblack"></button>
+	<button class="pause"></button>
+	<button class="startred"></button>
+</div>
+	<script type="text/javascript">
+		var clock, redclock, reclock_go = false,
+				black_clock_max = 300,
+				red_clock_max = 165;
+
+		$(document).ready(function() {
+
+			clock = $('.clock').FlipClock(black_clock_max, {
+		        clockFace: 'MinuteCounter',
+		        countdown: true,
+		        autoStart: false,
+		        callbacks: {
+		        	stop: function() {
+								if (clock.getTime().time === 0) {
+									redclock.setTime(red_clock_max);
+									redclock_go = true;
+									redclock.start()
+								}
+		        	}
+		        }
+		    });
+
+		    $('.pause').click(function(e) {
+					if (redclock.running)
+					  redclock.stop();
+					else if (redclock_go)
+						redclock.start();
+
+					if (clock.running)
+					  clock.stop();
+					else if (!redclock_go)
+						clock.start();
+		    });
+
+				$('.startblack').click(function(e) {
+					redclock_go = false;
+					redclock.stop()
+					redclock.setTime(red_clock_max)
+					clock.setTime(black_clock_max)
+					clock.start()
+				})
+
+				$('.startred').click(function(e) {
+					redclock_go = true;
+					clock.setTime(0)
+					clock.stop()
+				})
+
+				redclock = $('.redclock').FlipClock(red_clock_max, {
+			        clockFace: 'MinuteCounter',
+			        countdown: true,
+			        autoStart: false,
+							callbacks: {
+			        	stop: function() {
+									if (redclock.getTime().time === 0)
+										redclock_go = false;
+								}
+							}
+			    });
+
+		});
+	</script>
+
+	</body>
+</html>
